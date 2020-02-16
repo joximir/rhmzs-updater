@@ -17,16 +17,14 @@ else:
     page = url.urlopen('http://www.hidmet.gov.rs/ciril/osmotreni/index.php')
 
 
-#get city:temp pairs from page to weather[]
+#get weather data and 
 soup = BeautifulSoup(page, features='html.parser')
-weather = list()
 text = ""
 found = False
 for td in soup.findAll('td', {'class':['bela75', 'siva75']}):
     if found:
         text += " {}°C    ".format(td.string.strip())
         found = False
-        # weather.append((city, temp))
         continue
     if 'levo' in td['class']:
         text += "".join(normalize('NFKD', td.string).upper().split()) 
@@ -36,10 +34,6 @@ for td in soup.findAll('td', {'class':['bela75', 'siva75']}):
 
 dir = Path()
 file_path = dir / 'TEMPERATURA PO GRADOVIMA.txt'
-# for cty in weather:
-#     print(type(cty))
-#     cty = u"{} {}°C    ".format(cty[0], cty[1])
-#     print(cty)
 with file_path.open('w', encoding ='utf-8') as f:
     f.write(text)
 
